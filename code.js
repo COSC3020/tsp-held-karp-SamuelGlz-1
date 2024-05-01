@@ -29,15 +29,26 @@ function findSmallest(list){
 function tsp_hk(distance_matrix) {
 
     //Recursively go through the citites
+
+    var cache = []
+
     function heldKarp(cities, start){
         //console.log("starting the loop right now with cities: " + cities + " and start is " + start)
         //-----------------------------------------------------------------------------------------------------------------------------------------------
         
         if (cities.length == 2){
-            //console.log("distances are " + findDist(distance_matrix, cities[0], cities[1]))
             return findDist(distance_matrix, cities[0], cities[1])
         }
 
+        //----------------------------------------------------------------------------------------------------------------------------------------------
+
+
+        var key = JSON.stringify(cities);
+        if (cache[key] == undefined) { cache[key] = [] }
+        if (cache[key][start] !== undefined) { 
+            //console.log("Cache USED!!"); 
+            return cache[key][start] 
+        }
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -65,11 +76,13 @@ function tsp_hk(distance_matrix) {
         }
         //console.log(minVals)
 
-        return findSmallest(minVals)
+        let result = findSmallest(minVals)
+
+        cache[key][start] = result
+
+        return result
          
     }
-
-//-----------------------------------------------------------------------------------------------------------------------------------------------
 
     if(!(distance_matrix.length > 0) || distance_matrix.length == 1) {return 0}
 
@@ -78,7 +91,7 @@ function tsp_hk(distance_matrix) {
 
     for ( c = 0; c < distance_matrix.length; c++){
         cities.push(c)
-    } //console.log("cities are " + cities)
+    } 
 
     //loop thorugh all the possible starting cities
 
@@ -86,9 +99,8 @@ function tsp_hk(distance_matrix) {
 
     for (s = 0; s < distance_matrix.length; s++){
         minStartCity.push(heldKarp(cities,s))
+        //console.log("end of " + s + " city")
     }
-
-    //console.log("end of start city" + minStartCity) 
 
     return findSmallest(minStartCity) 
 } 
