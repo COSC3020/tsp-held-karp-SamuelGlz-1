@@ -1,5 +1,3 @@
-const { small } = require("jsverify");
-
 function findDist(distance_matrix, from, to){
 
     return (distance_matrix[from][to])
